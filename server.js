@@ -18,6 +18,8 @@ const upload = multer({
     storage: multer.memoryStorage()
 });
 
+const passport = require('passport');
+
 /* RUTAS */
 const users = require('./routes/usersRoutes');
 const categories = require('./routes/categoriesRoutes');
@@ -35,11 +37,14 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(cors());
+app.use(passport.initialize());
+require('./config/passport')(passport);
+
 app.disable('x-powered-by');
 app.set('port', port);
 
 /* LLAMANDO A LAS RUTAS */
-users(app, upload);
+users(app, upload, passport);
 categories(app);
 subCategories(app);
 address(app, upload);

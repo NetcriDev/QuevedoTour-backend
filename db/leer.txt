@@ -1,0 +1,20 @@
+
+Los archivos:
+ - establishment_data.json
+ - insert_establishments.sql
+ 
+Son los archivos que se usan para insertar los datos de los establecimientos en la base de datos.
+
+El archivo establishment_data.json contiene los datos de los establecimientos en formato json.
+El archivo insert_establishments.sql contiene los datos de los establecimientos en formato sql.     
+
+Han sido obtenidos de la base de datos de la aplicacion web de Quevedo Tour.
+Para tener los datos de manera más organizada en un solo archivo.
+
+Para la creacion de la base de datos es automatica ejecutando el archivo create_db.sql
+luego se ejecuta el archivo seed_data.js para insertar los datos en la base de datos.
+Como  lasa categorias y sbcategorias de manera automatica y/o precargadas.
+
+CORRER CON EL SIGUIENTE comandos
+
+node seed_data.js
