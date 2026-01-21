@@ -1,61 +1,61 @@
-const Product = require('../models/product');
+const Establishment = require('../models/establishment');
 const Category = require('../models/category');
 const storage = require('../utils/cloud_storage');
 const asyncForEach = require('../utils/async_foreach');
 const { Op } = require('sequelize');
+const sequelize = require('../config/database');
 
-// Helper to format product for App (images list)
-const formatProduct = (p) => {
-    const json = p.toJSON();
+// Helper to format establishment for App (images list)
+const formatEstablishment = (e) => {
+    const json = e.toJSON();
     json.images = [];
     if (json.image1) json.images.push(json.image1);
     if (json.image2) json.images.push(json.image2);
     if (json.image3) json.images.push(json.image3);
-    // Remove individual image fields if desired, or keep them for backward compat
     return json;
 };
 
 module.exports = {
 
-    async ListarHabitacion(req, res, next) {
+    async ListarTodo(req, res, next) {
         try {
-            const data = await Product.findAll();
-            const formatted = data.map(formatProduct);
+            const data = await Establishment.findAll();
+            const formatted = data.map(formatEstablishment);
             return res.status(200).json(formatted);
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
-                message: 'Error al obtener los hoteles',
+                message: 'Error al obtener los establecimientos',
                 error
             });
         }
     },
 
-    async eliminarHotel(req, res, next) {
+    async eliminarEstablecimiento(req, res, next) {
         try {
             const { id } = req.params;
-            await Product.destroy({ where: { id } });
+            await Establishment.destroy({ where: { id } });
             return res.status(200).json({
                 success: true,
-                message: 'Hotel eliminado'
+                message: 'Establecimiento eliminado'
             });
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
                 success: false,
-                message: 'Error al eliminar hotel',
+                message: 'Error al eliminar establecimiento',
                 error
             });
         }
     },
 
-    async listProductsRecentAdd(req, res, next) {
+    async listRecentAdd(req, res, next) {
         try {
-            const data = await Product.findAll({
+            const data = await Establishment.findAll({
                 order: [['created_at', 'DESC']],
                 limit: 10
             });
-            return res.status(200).json(data.map(formatProduct));
+            return res.status(200).json(data.map(formatEstablishment));
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
@@ -65,20 +65,17 @@ module.exports = {
         }
     },
 
-    async listProductsRandom(req, res, next) {
+    async listRandom(req, res, next) {
         try {
-            const data = await Product.findAll({
-                order: sequelize.random(), // Make sure sequelize is imported or use literal if needed
+            const data = await Establishment.findAll({
+                order: sequelize.random(),
                 limit: 10
             });
-            // Note: Sequelize.literal('RANDOM()') works for Postgres. 
-            // For cross-db support might need adjustment. using simple findAll for now if random fails.
-            return res.status(200).json(data.map(formatProduct));
+            return res.status(200).json(data.map(formatEstablishment));
         } catch (error) {
-            // Fallback if random fails
             try {
-                const data = await Product.findAll({ limit: 10 });
-                return res.status(200).json(data.map(formatProduct));
+                const data = await Establishment.findAll({ limit: 10 });
+                return res.status(200).json(data.map(formatEstablishment));
             } catch (e) {
                 return res.status(500).json({ message: 'Error', error: e });
             }
@@ -88,10 +85,10 @@ module.exports = {
     async findBySubcategory(req, res, next) {
         try {
             const { id_sub_category } = req.params;
-            const data = await Product.findAll({
+            const data = await Establishment.findAll({
                 where: { id_sub_category }
             });
-            return res.status(200).json(data.map(formatProduct));
+            return res.status(200).json(data.map(formatEstablishment));
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
@@ -104,10 +101,10 @@ module.exports = {
     async findByCategory(req, res, next) {
         try {
             const { id_category } = req.params;
-            const data = await Product.findAll({
+            const data = await Establishment.findAll({
                 where: { id_category }
             });
-            return res.status(200).json(data.map(formatProduct));
+            return res.status(200).json(data.map(formatEstablishment));
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
@@ -117,27 +114,27 @@ module.exports = {
         }
     },
 
-    async findByCategoryAndProductName(req, res, next) {
+    async findByCategoryAndName(req, res, next) {
         try {
-            const { id_category, product_name } = req.params;
-            const data = await Product.findAll({
+            const { id_category, name } = req.params;
+            const data = await Establishment.findAll({
                 where: {
                     id_category,
-                    name: { [Op.iLike]: `%${product_name}%` } // ILIKE for postgres
+                    name: { [Op.iLike]: `%${name}%` }
                 }
             });
-            return res.status(200).json(data.map(formatProduct));
+            return res.status(200).json(data.map(formatEstablishment));
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
-                message: 'Error al buscar producto',
+                message: 'Error al buscar establecimiento',
                 error
             });
         }
     },
 
     async create(req, res, next) {
-        let product = JSON.parse(req.body.product);
+        let establishment = JSON.parse(req.body.establishment);
         const files = req.files;
 
         if (files.length === 0) {
@@ -145,9 +142,7 @@ module.exports = {
         }
 
         try {
-            // Create product first to get ID
-            // Default images to null initially
-            const newProduct = await Product.create(product);
+            const newEstablishment = await Establishment.create(establishment);
 
             let inserts = 0;
             const imagesToUpdate = {};
@@ -165,19 +160,19 @@ module.exports = {
             });
 
             if (inserts > 0) {
-                await newProduct.update(imagesToUpdate);
+                await newEstablishment.update(imagesToUpdate);
             }
 
             return res.status(201).json({
                 success: true,
-                message: 'Producto registrado correctamente',
-                data: formatProduct(newProduct)
+                message: 'Establecimiento registrado correctamente',
+                data: formatEstablishment(newEstablishment)
             });
 
         } catch (error) {
             console.error(`Error: ${error}`);
             return res.status(500).json({
-                message: 'Error al registrar producto',
+                message: 'Error al registrar establecimiento',
                 error
             });
         }

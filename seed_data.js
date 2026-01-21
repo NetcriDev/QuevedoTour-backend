@@ -1,7 +1,7 @@
 const sequelize = require('./config/database');
 const Category = require('./models/category');
 const SubCategory = require('./models/sub_category');
-const Product = require('./models/product');
+const Establishment = require('./models/establishment');
 const Banner = require('./models/banner');
 
 const seed = async () => {
@@ -58,9 +58,9 @@ const seed = async () => {
             { title: 'Hoteles de Lujo', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80' }
         ]);
 
-        // --- Establishments (Products) ---
+        // --- Establishments ---
         console.log('🌱 Sembrando Establecimientos...');
-        const products = [];
+        const establishments = [];
 
         for (let i = 0; i < 25; i++) {
             let catIndex = 0; // Alimentos
@@ -85,8 +85,7 @@ const seed = async () => {
                 image = 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=800&q=60';
             } else if (i >= 20) {
                 catIndex = 4; // Compras
-                subCatIndex = 0; // (Hack: asignamos restaurante xq no creamos subcat compras) -> Le asignamos null o creamos una.
-                // Usemos null para probar
+                subCatIndex = 0; // (Hack: asignamos restaurante xq no creamos subcat compras)
                 name = `Centro Comercial Quevedo ${i + 1}`;
                 image = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=60';
             }
@@ -97,7 +96,7 @@ const seed = async () => {
                 subCatId = subCats[subCatIndex].id;
             }
 
-            products.push({
+            establishments.push({
                 name: name,
                 description: 'Un lugar increíble para disfrutar con familia y amigos.',
                 price: (i + 1) * 5.50,
@@ -115,7 +114,7 @@ const seed = async () => {
             });
         }
 
-        await Product.bulkCreate(products);
+        await Establishment.bulkCreate(establishments);
         console.log('✅ Seeding completado exitosamente.');
         process.exit(0);
 

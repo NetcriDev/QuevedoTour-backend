@@ -1,3 +1,18 @@
-node_modules/
-.env
+# .DS_Store macOS Archivo automático de macOS (Desktop Services Store)
+# Guarda configuración de carpetas (posición iconos, tamaño ventana)
 .DS_Store
+
+# .json: archivos de configuración
+serviceAccountKey.json
+
+# CLAVES PRIVADAS
+# .pem: certificados SSL, claves privadas RSA/ECDSA
+*.pem
+# .key: claves privadas RSA/ECDSA
+*.key
+
+# DEPENDENCIAS
+node_modules/ 
+
+# VARIABLES DE ENTORNO
+.env

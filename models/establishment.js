@@ -3,9 +3,9 @@ const sequelize = require('../config/database');
 const Category = require('./category');
 const SubCategory = require('./sub_category');
 
-class Product extends Model { }
+class Establishment extends Model { }
 
-Product.init({
+Establishment.init({
     id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -77,18 +77,18 @@ Product.init({
     }
 }, {
     sequelize,
-    modelName: 'Product',
-    tableName: 'products',
+    modelName: 'Establishment',
+    tableName: 'establishments',
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 });
 
 // Relaciones
-Category.hasMany(Product, { foreignKey: 'id_category' });
-Product.belongsTo(Category, { foreignKey: 'id_category' });
+Category.hasMany(Establishment, { foreignKey: 'id_category' });
+Establishment.belongsTo(Category, { foreignKey: 'id_category' });
 
-SubCategory.hasMany(Product, { foreignKey: 'id_sub_category' });
-Product.belongsTo(SubCategory, { foreignKey: 'id_sub_category' });
+SubCategory.hasMany(Establishment, { foreignKey: 'id_sub_category' });
+Establishment.belongsTo(SubCategory, { foreignKey: 'id_sub_category' });
 
-module.exports = Product;
+module.exports = Establishment;

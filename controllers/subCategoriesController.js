@@ -1,5 +1,5 @@
 const SubCategory = require('../models/sub_category');
-const Product = require('../models/product'); // Used in some methods originally
+const Establishment = require('../models/establishment'); // Used in some methods originally
 const { Op } = require('sequelize');
 
 module.exports = {

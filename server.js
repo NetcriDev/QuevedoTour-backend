@@ -22,7 +22,7 @@ const upload = multer({
 const users = require('./routes/usersRoutes');
 const categories = require('./routes/categoriesRoutes');
 const subCategories = require('./routes/subCategoriesRoutes');
-const products = require('./routes/productsRoutes');
+const establishments = require('./routes/establishmentsRoutes');
 const address = require('./routes/addressRoutes');
 const orders = require('./routes/ordersRoutes');
 const banners = require('./routes/bannersRoutes'); // NEW
@@ -44,7 +44,7 @@ categories(app);
 subCategories(app);
 address(app, upload);
 orders(app);
-products(app, upload);
+establishments(app, upload);
 banners(app, upload); // Register Banners
 
 // Test DB Connection
