@@ -1,8 +1,10 @@
 const sequelize = require('./config/database');
 const Category = require('./models/category');
 const SubCategory = require('./models/sub_category');
-const Product = require('./models/product');
+const Establishment = require('./models/establishment');
 const Banner = require('./models/banner');
+const User = require('./models/user');
+const Rol = require('./models/rol');
 
 const testORM = async () => {
     try {
@@ -21,15 +23,23 @@ const testORM = async () => {
         const categories = await Category.findAll();
         console.log(`✅ Found ${categories.length} categories.`);
 
-        // List Products
-        const products = await Product.findAll();
-        console.log(`✅ Found ${products.length} products.`);
-        if (products.length > 0) {
-            const p = products[0];
-            console.log('Product Sample:', p.toJSON());
-            if (p.rating !== undefined) console.log('✅ Product has rating field');
-            if (p.website !== undefined) console.log('✅ Product has website field');
+        // List Establishment
+        const establishments = await Establishment.findAll();
+        console.log(`✅ Found ${establishments.length} establishments.`);
+        if (establishments.length > 0) {
+            const e = establishments[0];
+            console.log('Establishment Sample:', e.toJSON());
+            if (e.rating !== undefined) console.log('✅ Establishment has rating field');
+            if (e.website !== undefined) console.log('✅ Establishment has website field');
         }
+
+        // List Users
+        const users = await User.findAll();
+        console.log(`✅ Found ${users.length} users.`);
+
+        // List Roles
+        const roles = await Rol.findAll();
+        console.log(`✅ Found ${roles.length} roles.`);
 
         process.exit(0);
 

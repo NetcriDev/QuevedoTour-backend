@@ -1,26 +1,34 @@
-const db = require('../config/config');
-const Rol = {};
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-Rol.create = (id_user, id_rol) => {
-    const sql = `
-    INSERT INTO 
-        user_has_roles(
-            id_user,
-            id_rol,
-            created_at,
-            updated_at
-        )
-    VALUES($1, $2, $3, $4)    
-    `;
+class Rol extends Model { }
 
-    return db.none(sql,[
-        id_user,
-        id_rol,
-        new Date(),
-        new Date()
-    ]);
-
-}
-
+Rol.init({
+    id: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    route: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
+}, {
+    sequelize,
+    modelName: 'Rol',
+    tableName: 'roles',
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+});
 
 module.exports = Rol;
