@@ -209,7 +209,14 @@ module.exports = {
                 // Assign default role (CLIENTE)
                 const clienteRol = await Rol.findOne({ where: { name: 'CLIENTE' } });
                 if (clienteRol) {
-                    await data.addRol(clienteRol);
+                    // Insert directly into the junction table
+                    await sequelize.query(
+                        'INSERT INTO user_has_roles (id_user, id_rol, created_at, updated_at) VALUES (?, ?, NOW(), NOW())',
+                        {
+                            replacements: [data.id, clienteRol.id],
+                            type: sequelize.QueryTypes.INSERT
+                        }
+                    );
                 }
 
                 return res.status(201).json({
