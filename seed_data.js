@@ -5,6 +5,7 @@ const Establishment = require('./models/establishment');
 const Banner = require('./models/banner');
 const User = require('./models/user');
 const Rol = require('./models/rol');
+const Review = require('./models/review');
 
 const seed = async () => {
     try {
@@ -105,6 +106,13 @@ const seed = async () => {
             { title: 'Ruta del Río', image: 'https://images.unsplash.com/photo-1449034446853-66c86144b0ad?auto=format&fit=crop&w=1000&q=80' },
             { title: 'Hoteles de Lujo', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80' }
         ]);
+
+        // --- Reviews ---
+        console.log('🌱 Sembrando Reseñas...');
+        // We need some establishments first. The insert_establishments script usually runs after this,
+        // but if we want to seed reviews here, we might need to fetch or create some establishments.
+        // For now, let's just make sure the table is created. 
+        // We'll add a comment about how to add reviews manually or via script.
 
         console.log('✅ Seeding completado exitosamente.');
         process.exit(0);

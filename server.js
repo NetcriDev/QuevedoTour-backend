@@ -28,6 +28,7 @@ const establishments = require('./routes/establishmentsRoutes');
 const address = require('./routes/addressRoutes');
 const orders = require('./routes/ordersRoutes');
 const banners = require('./routes/bannersRoutes'); // NEW
+const reviews = require('./routes/reviewRoutes'); // NEW
 
 const port = process.env.PORT || 3000;
 
@@ -40,9 +41,6 @@ app.use(cors());
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
-app.disable('x-powered-by');
-app.set('port', port);
-
 /* LLAMANDO A LAS RUTAS */
 users(app, upload, passport);
 categories(app);
@@ -51,6 +49,7 @@ address(app, upload);
 orders(app);
 establishments(app, upload);
 banners(app, upload); // Register Banners
+reviews(app, upload, passport); // Register Reviews
 
 // Test DB Connection
 sequelize.authenticate()

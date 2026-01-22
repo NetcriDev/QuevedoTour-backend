@@ -48,26 +48,42 @@ VALUES(
 );
 
 
-DROP TABLE IF EXISTS products CASCADE;
-CREATE TABLE products(
+DROP TABLE IF EXISTS establishments CASCADE;
+CREATE TABLE establishments(
 	id BIGSERIAL PRIMARY KEY,
 	name VARCHAR(180) NOT NULL UNIQUE,
-	description VARCHAR(255) NOT NULL,
+	description TEXT NOT NULL,
 	price DECIMAL DEFAULT 0,
 	image1 VARCHAR(255) NULL,
 	image2 VARCHAR(255) NULL,
 	image3 VARCHAR(255) NULL,	
-	id_sub_category BIGINT NOT NULL,
+	id_sub_category BIGINT NULL,
 	id_category BIGINT NOT NULL,
-	address VARCHAR(255) NOT NULL,
-	phone VARCHAR(80) NOT NULL UNIQUE,
-	whatsapp VARCHAR(255) NOT NULL,
-	location VARCHAR(255) NOT NULL,
+	address VARCHAR(255) NULL,
+	phone VARCHAR(80) NULL UNIQUE,
+	whatsapp VARCHAR(255) NULL,
+	location VARCHAR(255) NULL,
+	rating FLOAT DEFAULT 4.5,
+	website VARCHAR(255) NULL,
 	created_at TIMESTAMP(0) NOT NULL,
 	updated_at TIMESTAMP(0) NOT NULL,
-	FOREIGN KEY(id_sub_category) REFERENCES sub_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(id_sub_category) REFERENCES sub_categories(id) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY(id_category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
 
+);
+
+DROP TABLE IF EXISTS reviews CASCADE;
+CREATE TABLE reviews(
+    id BIGSERIAL PRIMARY KEY,
+    id_establishment BIGINT NOT NULL,
+    id_user BIGINT NOT NULL,
+    rating DECIMAL(3, 1) NOT NULL,
+    comment TEXT NOT NULL,
+    images JSON NULL,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL,
+    FOREIGN KEY(id_establishment) REFERENCES establishments(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(id_user) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS users CASCADE;
@@ -120,23 +136,6 @@ CREATE TABLE sub_categories (
 	FOREIGN KEY(id_category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- DROP TABLE IF EXISTS products CASCADE;
--- CREATE TABLE products(
--- 	id BIGSERIAL PRIMARY KEY,
--- 	name VARCHAR(180) NOT NULL UNIQUE,
--- 	description VARCHAR(255) NOT NULL,
--- 	price DECIMAL DEFAULT 0,
--- 	image1 VARCHAR(255) NULL,
--- 	image2 VARCHAR(255) NULL,
--- 	image3 VARCHAR(255) NULL,
--- 	id_category BIGINT NOT NULL,
--- 	id_sub_categories BIGINT NOT NULL,
--- 	created_at TIMESTAMP(0) NOT NULL,
--- 	updated_at TIMESTAMP(0) NOT NULL,
--- 	FOREIGN KEY(id_category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
--- 	FOREIGN KEY(id_sub_categories) REFERENCES sub_categories(id) ON UPDATE CASCADE ON DELETE CASCADE
--- );
-
 
 DROP TABLE IF EXISTS address CASCADE;
 CREATE TABLE address(
@@ -170,15 +169,15 @@ CREATE TABLE orders(
 	FOREIGN KEY(id_address) REFERENCES address(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS order_has_products CASCADE;
-CREATE TABLE order_has_products(
+DROP TABLE IF EXISTS order_has_establishments CASCADE;
+CREATE TABLE order_has_establishments(
 	id_order BIGINT NOT NULL,
-	id_product BIGINT NOT NULL,
+	id_establishment BIGINT NOT NULL,
 	quantity BIGINT NOT NULL,
 	created_at TIMESTAMP(0) NOT NULL,
 	updated_at TIMESTAMP(0) NOT NULL,
-	PRIMARY KEY (id_order, id_product),
+	PRIMARY KEY (id_order, id_establishment),
 	FOREIGN KEY(id_order) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(id_product) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY(id_establishment) REFERENCES establishments(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
