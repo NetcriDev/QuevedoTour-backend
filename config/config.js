@@ -11,18 +11,18 @@ types.setTypeParser(1114, function (stringValue) {
 });
 
 const databaseConfig = {
-
-    'host': 'localhost',
-    'port': 5432,
-    'database': 'db-quevedo-tour',
-    'user': 'postgres',
-    'password': '1234',
-    ssl: true,
+    'host': process.env.DB_HOST || 'localhost',
+    'port': process.env.DB_PORT || 5432,
+    'database': process.env.DB_NAME || 'db-quevedo-tour',
+    'user': process.env.DB_USER || 'postgres',
+    'password': process.env.DB_PASS || '1234',
+    ssl: process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production',
     dialect: 'postgres',
     dialectOptions: {
-        "ssl": { "require": true }
+        "ssl": process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production' 
+            ? { "require": true, "rejectUnauthorized": false } 
+            : false
     },
-
     rejectUnauthorized: false,
     requestCert: true,
     agent: false

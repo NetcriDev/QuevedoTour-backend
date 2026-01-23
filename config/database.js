@@ -10,8 +10,13 @@ const dbDialect = process.env.DB_DIALECT || 'postgres'; // 'mysql', 'sqlite', 'p
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
     host: dbHost,
     dialect: dbDialect,
-    port: 5432,
+    port: process.env.DB_PORT || 5432,
     logging: false, // Set to console.log to see SQL queries
+    dialectOptions: {
+        ssl: (process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production') 
+            ? { require: true, rejectUnauthorized: false }
+            : false
+    },
     pool: {
         max: 5,
         min: 0,
